@@ -107,8 +107,8 @@ const CosmosCanvas = ({ socket, currentUser, users, onMove, nearbyUserIds }) => 
       if (keys.ArrowRight) { me.x += speed; moved = true; }
 
       if (moved) {
-        me.x = Math.max(24, Math.min(appWidth - 24, me.x));
-        me.y = Math.max(24, Math.min(appHeight - 24, me.y));
+        me.x = Math.max(24, Math.min(4000 - 24, me.x));
+        me.y = Math.max(24, Math.min(4000 - 24, me.y));
 
         const now = Date.now();
         if (now - lastEmitTime > 33) {
@@ -116,6 +116,9 @@ const CosmosCanvas = ({ socket, currentUser, users, onMove, nearbyUserIds }) => 
           lastEmitTime = now;
         }
       }
+
+      app.stage.position.x = appWidth / 2 - me.x;
+      app.stage.position.y = appHeight / 2 - me.y;
 
       // Check current zone
       let currentZone = null;

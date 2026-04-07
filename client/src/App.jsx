@@ -18,8 +18,8 @@ function App() {
     
     socket.connect();
     
-    const initialX = Math.random() * (window.innerWidth - 100) + 50;
-    const initialY = Math.random() * (window.innerHeight - 100) + 50;
+    const initialX = Math.random() * 800 + 400;
+    const initialY = Math.random() * 800 + 400;
 
     socket.emit('join', { username, x: initialX, y: initialY });
     
@@ -93,7 +93,7 @@ function App() {
           
           <div className="absolute top-0 left-0 w-full p-4 pointer-events-none z-30 flex justify-between items-start">
             <div className="bg-gray-900/80 backdrop-blur px-4 py-2 rounded-xl border border-gray-700 shadow-lg pointer-events-auto">
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">Virtual Cosmos</h1>
+              <h1 className="text-xl font-bold text-blue-400">Virtual Cosmos</h1>
               <div className="text-sm font-medium text-gray-400 flex items-center gap-2 mt-1">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                 {allUsersToRender.length} User{allUsersToRender.length !== 1 ? 's' : ''} Online
@@ -118,8 +118,8 @@ function App() {
                    key={u.userId}
                    className={`absolute w-1.5 h-1.5 rounded-full ${u.userId === currentUser.userId ? 'bg-white z-10' : 'bg-green-500'}`}
                    style={{ 
-                     left: `${(u.x / window.innerWidth) * 100}%`, 
-                     top: `${(u.y / window.innerHeight) * 100}%`,
+                     left: `${(u.x / 4000) * 100}%`, 
+                     top: `${(u.y / 4000) * 100}%`,
                      transform: 'translate(-50%, -50%)'
                    }}
                  />

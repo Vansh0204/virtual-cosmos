@@ -37,11 +37,23 @@ io.on('connection', (socket) => {
   socket.on('join', async (data) => {
     const { username, x, y } = data;
     
-    // Dynamic import to avoid circular dependency issues if any
-    const User = (await import('./models/User.js')).default;
-    
+    // 1. Instantly update active memory and broadcast state
+    const userData = {
+      userId: socket.id,
+      username,
+      x,
+      y,
+      connectedTo: []
+    };
+    activeUsers.set(socket.id, userData);
+
+    const allCurrentUsers = Array.from(activeUsers.values());
+    socket.emit('init', { users: allCurrentUsers });
+    socket.broadcast.emit('user-joined', userData);
+
+    // 2. Perform DB logic asynchronously without blocking the UI
     try {
-      // Create new user in DB (upsert just in case)
+      const User = (await import('./models/User.js')).default;
       await User.findOneAndUpdate(
         { userId: socket.id },
         { 
@@ -56,23 +68,6 @@ io.on('connection', (socket) => {
     } catch (err) {
       console.error('Error saving user to DB:', err);
     }
-
-    const userData = {
-      userId: socket.id,
-      username,
-      x,
-      y,
-      connectedTo: []
-    };
-
-    activeUsers.set(socket.id, userData);
-
-    // Send all current users to the new user
-    const allCurrentUsers = Array.from(activeUsers.values());
-    socket.emit('init', { users: allCurrentUsers });
-
-    // Broadcast to others
-    socket.broadcast.emit('user-joined', userData);
   });
 
   socket.on('move', (data) => handleMovement(io, socket, data));
